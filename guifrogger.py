@@ -1,94 +1,6 @@
 from graphics import *
+from FroggerApp import frogger
 import random, sys
-
-class Enemy(Image):
-
-	def run(self, dx):
-		self.move(dx, 0)
-		self.respawn()
-
-	def respawn(self):
-		x = self.getAnchor().getX()
-		if x < -100:
-			self.move(936,0)
-		elif x > 836:
-			self.move(-936,0)
-
-class Friend(Image):
-
-	def respawn(self):
-		x = self.getAnchor().getX()
-		y = self.getAnchor().getY()
-		dx = x - 46*(random.randint(2,15))+23
-		dy = y - 46*(random.randint(7,8))+23
-		self.move(-dx, -dy)
-
-	def colision(self, other):
-		xs = self.getAnchor().getX()
-		ys = self.getAnchor().getY()
-		xo = other.getAnchor().getX()
-		yo = other.getAnchor().getY()
-		ws = self.getWidth()
-		hs = self.getHeight()
-		wo = other.getWidth()
-		ho = other.getHeight()
-		if (abs(xs - xo) < (ws + wo)/2) and (abs(ys - yo) < (hs + ho)/2):
-			return True
-
-class Frog(Image):
-
-	def up(self, d):
-		y = self.getAnchor().getY()
-		if y - d < 69:
-			return
-		self.move(0, -d)
-	def down(self, d):
-		y = self.getAnchor().getY()
-		if y + d > 575:
-			return
-		self.move(0, d)
-	def right(self, d):
-		x = self.getAnchor().getX()
-		if x + d > 713:
-			return
-		self.move(d, 0)
-	def left(self, d):
-		x = self.getAnchor().getX()
-		if x - d < 23:
-			return
-		self.move(-d, 0)
-	def respawn(self):
-		x = self.getAnchor().getX()
-		y = self.getAnchor().getY()
-		dx = x - 46*(random.randint(2,15))+23
-		dy = y - 575
-		self.move(-dx, -dy)
-	def colision(self, other):
-		xs = self.getAnchor().getX()
-		ys = self.getAnchor().getY()
-		xo = other.getAnchor().getX()
-		yo = other.getAnchor().getY()
-		ws = self.getWidth()
-		hs = self.getHeight()
-		wo = other.getWidth()
-		ho = other.getHeight()
-		if (abs(xs - xo) < (ws + wo)/2) and (abs(ys - yo) < (hs + ho)/2):
-			return True
-
-def game_over(win):
-	txt = Text(Point(736/2, 598/2),'GAME OWER\n Play again?\nY / N')
-	txt.setTextColor(color_rgb(200, 25, 25))
-	txt.setSize(30)
-	txt.setFace('helvetica')
-	txt.draw(win)
-	while True:
-		key = win.checkKey()
-		if key == 'y':
-			txt.undraw()
-			return
-		if key == 'n':
-			sys.exit()
-		update(30)
 
 def main():
 
@@ -168,25 +80,25 @@ def main():
 
 	#creation and rendering of game objects
 	#player objekt
-	player = Frog(Point(46*(random.randint(2,15))+23, 575), 'sprites/frog.png')
+	player = frogger.Frog(Point(46*(random.randint(2,15))+23, 575), 'sprites/frog.png')
 	#fly object
-	bee = Friend(Point(46*(random.randint(2,15))+23, 46*(random.randint(6,7))+23), 'sprites/bee.png')
+	bee = frogger.Friend(Point(46*(random.randint(2,15))+23, 46*(random.randint(6,7))+23), 'sprites/bee.png')
 	bee.draw(win)
 	#objects of cars, turtles and trees
 	for i in range(4):
 		if (i+1) % 2 == 0:
-			cars.append(Enemy(Point(-100, 46*(11-i)+23), random.choice(cars_right)))
-			waters.append(Enemy(Point(-100, 46*(5-i)+23), random.choice(water_right)))
+			cars.append(frogger.Enemy(Point(-100, 46*(11-i)+23), random.choice(cars_right)))
+			waters.append(frogger.Enemy(Point(-100, 46*(5-i)+23), random.choice(water_right)))
 		else:
-			cars.append(Enemy(Point(836, 46*(11-i)+23), random.choice(cars_left)))
-			waters.append(Enemy(Point(836, 46*(5-i)+23), random.choice(water_left)))
+			cars.append(frogger.Enemy(Point(836, 46*(11-i)+23), random.choice(cars_left)))
+			waters.append(frogger.Enemy(Point(836, 46*(5-i)+23), random.choice(water_left)))
 		cars[i].draw(win)
 		waters[i].draw(win)
 	for i in range(2):
 		if (i+1) % 2 == 0:
-			frogs.append(Enemy(Point(-100, 46*6+23), frogs_r))
+			frogs.append(frogger.Enemy(Point(-100, 46*6+23), frogs_r))
 		else:
-			frogs.append(Enemy(Point(836, 46*7+23), frogs_l))
+			frogs.append(frogger.Enemy(Point(836, 46*7+23), frogs_l))
 		frogs[i].draw(win)
 	player.draw(win)
 	#event loop
@@ -237,7 +149,7 @@ def main():
 				if lives < 0:
 					lives = 3
 					score = 0
-					game_over(win)
+					frogger.game_over(win)
 					for home in homes:
 						home.undraw()
 					homes = []
@@ -256,7 +168,7 @@ def main():
 					for home in homes:
 						home.undraw()
 					homes = []
-					game_over(win)
+					frogger.game_over(win)
 				player.respawn()
 
 		for i in range(len(finish)):
@@ -281,7 +193,7 @@ def main():
 						for home in homes:
 							home.undraw()
 						homes = []
-						game_over(win)
+						frogger.game_over(win)
 				player.respawn()
 		for el in frogs:
 			if bee.colision(el):
