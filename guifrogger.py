@@ -1,5 +1,5 @@
 from graphics import *
-from FroggerApp import frogger
+import FroggerApp as frogger
 import random, sys
 
 def main():
