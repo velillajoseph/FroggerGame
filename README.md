@@ -10,3 +10,11 @@
 # Juan Cabrera 130832
 # Joseph Velilla 104079
 # Jarred Pérez 115471
+
+Images references:
+
+https://www.pinclipart.com/maxpin/hhxmRb/ 
+
+Game reference:
+
+https://froggerclassic.appspot.com/
